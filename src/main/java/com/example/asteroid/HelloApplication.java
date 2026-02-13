@@ -8,23 +8,25 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class HelloApplication extends Application {
 
     @Override
     public void start(Stage stage) {
 
-
-
         Pane pane = new Pane();
-        Astero astero=new Astero(50,50);
-        pane.getChildren().add(astero.getCharacter());
-        astero.turnRight();
-        astero.turnRight();
-        astero.accelerate();
-        astero.accelerate();
+        List<Astero> asteroids = new ArrayList<>();
+
+        for (int i = 0; i < 5; i++) {
+            Astero astero = new Astero(
+                    (int) (Math.random() * 600),
+                    (int) (Math.random() * 400)
+            );
+
+            asteroids.add(astero);
+            pane.getChildren().add(astero.getCharacter());
+        }
 
 
         pane.setPrefSize(600, 400);
@@ -64,9 +66,12 @@ public class HelloApplication extends Application {
                 }
 
                 ship.move();
-                astero.move();
-                if (ship.collide(astero)){
-                    stop();
+                for (Astero astero : asteroids) {
+                    astero.move();
+
+                    if (ship.collide(astero)) {
+                        stop();
+                    }
                 }
             }
         }.start();
