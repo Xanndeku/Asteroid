@@ -1,63 +1,76 @@
 package com.example.asteroid;
 
+import com.example.asteroid.Astero;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class HelloApplication extends Application {
+
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
+
+
+
         Pane pane = new Pane();
+        Astero astero=new Astero(50,50);
+        pane.getChildren().add(astero.getCharacter());
+        astero.turnRight();
+        astero.turnRight();
+        astero.accelerate();
+        astero.accelerate();
+
+
         pane.setPrefSize(600, 400);
 
-        Polygon ship = new Polygon(-5, -5, 10, 0, -5, 5);
-        ship.setTranslateX(300);
-        ship.setTranslateY(200);
-        ship.setRotate(30);
+        com.example.asteroid.Ship ship = new com.example.asteroid.Ship(300, 200);
 
-        pane.getChildren().add(ship);
+        pane.getChildren().add(ship.getCharacter());
 
         Scene scene = new Scene(pane);
-        stage.setTitle("Asteroids!");
         stage.setScene(scene);
+        stage.setTitle("Asteroids!");
 
         Map<KeyCode, Boolean> pressedKeys = new HashMap<>();
 
-        scene.setOnKeyPressed(event -> {
-            pressedKeys.put(event.getCode(), Boolean.TRUE);
-        });
+        scene.setOnKeyPressed(event ->
+                pressedKeys.put(event.getCode(), true)
+        );
 
-        scene.setOnKeyReleased(event -> {
-            pressedKeys.put(event.getCode(), Boolean.FALSE);
-        });
+        scene.setOnKeyReleased(event ->
+                pressedKeys.put(event.getCode(), false)
+        );
+
         new AnimationTimer() {
             @Override
-            public void handle(long now){
-                if (pressedKeys.getOrDefault(KeyCode.LEFT, false)){
-                    ship.setRotate(ship.getRotate() - 5);
+            public void handle(long now) {
+
+                if (pressedKeys.getOrDefault(KeyCode.LEFT, false)) {
+                    ship.turnLeft();
                 }
-                if (pressedKeys.getOrDefault(KeyCode.RIGHT, false)){
-                    ship.setRotate(ship.getRotate() + 5);
+
+                if (pressedKeys.getOrDefault(KeyCode.RIGHT, false)) {
+                    ship.turnRight();
+                }
+
+                if (pressedKeys.getOrDefault(KeyCode.UP, false)) {
+                    ship.accelerate();
+                }
+
+                ship.move();
+                astero.move();
+                if (ship.collide(astero)){
+                    stop();
                 }
             }
         }.start();
 
-
-
-
-
-
         stage.show();
     }
-
 }
-
