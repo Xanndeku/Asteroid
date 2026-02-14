@@ -10,8 +10,16 @@ public class character {
         return collisionArea.getBoundsInLocal().getWidth() != -1;
     }
 
-    protected Polygon character;
-    protected Point2D movement;
+    private Polygon character;
+    private Point2D movement;
+
+    public Point2D getMovement() {
+        return movement;
+    }
+
+    public void setMovement(Point2D movement) {
+        this.movement = movement;
+    }
 
     public character(Polygon polygon, int x, int y) {
         this.character = polygon;
@@ -31,6 +39,21 @@ public class character {
     public void move() {
         character.setTranslateX(character.getTranslateX() + movement.getX());
         character.setTranslateY(character.getTranslateY() + movement.getY());
+        if (this.character.getTranslateX() < 0) {
+            this.character.setTranslateX(this.character.getTranslateX() + HelloApplication.WIDTH);
+        }
+
+        if (this.character.getTranslateX() > HelloApplication.WIDTH) {
+            this.character.setTranslateX(this.character.getTranslateX() % HelloApplication.WIDTH);
+        }
+
+        if (this.character.getTranslateY() < 0) {
+            this.character.setTranslateY(this.character.getTranslateY() + HelloApplication.HEIGHT);
+        }
+
+        if (this.character.getTranslateY() > HelloApplication.HEIGHT) {
+            this.character.setTranslateY(this.character.getTranslateY() % HelloApplication.HEIGHT);
+        }
     }
 
     public void accelerate() {
